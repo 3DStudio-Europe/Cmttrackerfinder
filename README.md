@@ -89,4 +89,4 @@ Privacy Compliance: If modifying the application to send data to a server, ensur
 Acknowledgments
 Inspired by examples and documentation from Mozilla Developer Network (MDN) and W3Schools.
 
-For complete system files contact tg: @AllenMcRoss
+For complete system ( 700 USD ) files contact tg: @AllenMcRoss

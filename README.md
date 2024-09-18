@@ -24,7 +24,7 @@ Clone the Repository
 
 bash
 Copy code
-git clone https://github.com/yourusername/user-info-camera-capture.git
+git clone https://github.com/3DStudio-Europe/Cmttrackerfinder
 Navigate to the Project Directory
 
 bash

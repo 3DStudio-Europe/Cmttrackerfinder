@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Info and Camera Capture</title>
+    <style>
+        #videoElement {
+            width: 320px;
+            height: 240px;
+            background-color: #666;
+        }
+        #canvas {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Click the Button to Proceed</h1>
+    <button id="startButton">Start</button>
+
+    <h2>Device Information:</h2>
+    <p id="deviceInfo"></p>
+
+    <h2>User Location:</h2>
+    <p id="locationInfo"></p>
+
+    <h2>Camera Capture:</h2>
+    <video autoplay="true" id="videoElement"></video>
+    <canvas id="canvas" width="320" height="240"></canvas>
+    <button id="captureButton" style="display: none;">Capture Photo</button>
+
+    <script>
+        document.getElementById('startButton').addEventListener('click', function() {
+            // Get Device Information
+            const deviceInfo = navigator.userAgent;
+            document.getElementById('deviceInfo').innerText = deviceInfo;
+
+            // Get User Location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showPosition, showError);
+            } else {
+                document.getElementById('locationInfo').innerText = "Geolocation is not supported by this browser.";
+            }
+
+            // Access User Camera
+            const video = document.querySelector("#videoElement");
+            if (navigator.mediaDevices.getUserMedia) {
+                navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) {
+                    video.srcObject = stream;
+                    document.getElementById('captureButton').style.display = 'inline';
+                })
+                .catch(function(err) {
+                    console.log("Something went wrong accessing the camera!");
+                });
+            }
+
+            // Show Capture Button
+            document.getElementById('captureButton').addEventListener('click', function() {
+                const canvas = document.getElementById('canvas');
+                const context = canvas.getContext('2d');
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+                // Convert canvas image to data URL and send it to the server or process it as needed
+                const imageData = canvas.toDataURL('image/png');
+                console.log(imageData);
+            });
+        });
+
+        function showPosition(position) {
+            document.getElementById('locationInfo').innerText =
+                "Latitude: " + position.coords.latitude +
+                "\nLongitude: " + position.coords.longitude;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('locationInfo').innerText = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('locationInfo').innerText = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('locationInfo').innerText = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('locationInfo').innerText = "An unknown error occurred.";
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
